@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do list</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            background-image: url(image.png);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .heading {
+            text-align: center;
+            text-shadow: 10px black;
+            text-decoration: underline;
+            color: rgb(47, 2, 42);
+            font-weight: bold;
+            font-size: 30px;
+            border: 2px solid black;
+            background-color: rgb(226, 186, 217);
+            width: 600px;
+            margin: 10px auto;
+            padding: 5px;
+            border-radius: 17px;
+            box-shadow: inset 0 -3em 3em rgba(252, 193, 56, 0.3),
+                0 0 0 2px white,
+                0.3em 0.3em 1em rgb(200 0 0 / 60%);
+
+        }
+
+        .form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            /* border: 3px solid black dashed; */
+            border-radius: 6px;
+            width: 500px;
+            margin: 50px auto;
+            background-color: burlywood;
+        }
+
+        .form ul li {
+            list-style: none;
+            text-decoration: none;
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: 24px;
+            text-decoration: double underline;
+        }
+
+        .initials {
+            font-weight: bold;
+            font-size: 18px;
+            font-family: cursive;
+        }
+
+        #add {
+            border-radius: 3px;
+            color: white;
+            background-color: rgb(41, 41, 189);
+            margin: 10px 10px;
+            font-size: 14px;
+            padding: 4px 10px;
+
+        }
+
+        #add:hover {
+            cursor: pointer;
+            background-color: blue;
+        }
+
+        #del_item{
+            border-radius: 3px;
+            color: white;
+            background-color: rgb(41, 41, 189);
+            margin: 10px 10px;
+            font-size: 14px;
+            padding: 4px 10px;
+        }
+        #del_item:hover{
+            cursor: pointer;
+            background-color: blue;
+        }
+
+        .image img {
+            width: 200px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px auto;
+            border: 3px ridge black;
+
+        }
+        .tables{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            padding: 10px;
+        }
+        .table_head{
+            font-size: 23px;
+            font-weight: bold;
+            font-family: 'Times New Roman', Times, serif;
+            text-align: center;
+            text-decoration: underline;
+        }
+        table tr{
+            border: 2px solid black;
+            background-color: blanchedalmond;
+            font-size: 18px;
+            margin: auto;
+            padding: 3px;
+        }
+        table tr th{
+            font-size: 20px;
+            font-weight: bold;
+            margin: 30px;
+            padding: 45px;
+            border: 2px solid rgb(176, 99, 48);
+        }
+        table tr td{
+            font-size: 18px;
+            /* font-weight: bold; */
+            margin: 30px;
+            padding: 45px;
+            border: 2px solid rgb(176, 99, 48);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="heading">
+        <h3>Manage your schedule efficiently..</h3>
+    </div>
+    <div class="image">
+        <img src="image1.png" alt="notes">
+    </div>
+    <div class="form">
+
+        <ul>
+            <div class="title">TO-DO LIST</div>
+            <li>
+                <label for="task" class="initials">Task:<br> </label>
+                <input type="text" id="title" placeholder="Enter the task..">
+            </li>
+            <li>
+                <label for="description" class="initials">Description:<br> </label>
+                <textarea name="desc" id="description" cols="30" rows="4"
+                    placeholder="Add the description.."></textarea>
+            </li>
+            <li>
+                <button class="btn" id="add">ADD</button>
+            </li>
+        </ul>
+    </div>
+    <div class="table_head">Your List</div>
+    <div class="tables">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">S.no.</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Get some Coffee</td>
+                    <td>You need coffee as you are a coder</td>
+                    <td><button class="btn" id="del_item">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function getAndUpdate(){
+            console.log("Updating List");
+            tit = document.getElementById('title').value;
+            desc = document.getElementById('description').value;
+            if(localStorage.getItem('itemsJson')==null){
+                itemJsonArray =[];
+                itemJsonArray.push([tit, desc]);
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+            }
+            else{
+                itemJsonArrayStr = localStorage.getItem('itemsJson');
+                itemJsonArray = JSON.parse(itemJsonArrayStr);
+                itemJsonArray.push([tit, desc]);
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+            }
+            update();
+            document.getElementById('title').value = null;
+            document.getElementById('description').value = null;
+        }
+        function update(){
+            if(localStorage.getItem('itemsJson')==null){
+                itemJsonArray =[];
+                localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+            }
+            else{
+                itemJsonArrayStr = localStorage.getItem('itemsJson');
+                itemJsonArray = JSON.parse(itemJsonArrayStr);
+            }
+            let tableBody = document.getElementById("tableBody");
+            let str = "";
+            itemJsonArray.forEach((element, index) => {
+                str += `
+                <tr>
+                    <th scope="row">${index+1}</th>
+                    <td>${element[0]}</td>
+                    <td>${element[1]}</td>
+                    <td><button class="btn" id="del_item" onclick = "deleted(${index})">Delete</button></td>
+                </tr>
+                `
+            });
+            tableBody.innerHTML = str;
+        }
+        add = document.getElementById("add");
+        add.addEventListener("click", getAndUpdate);
+        update();
+        function deleted(itemIndex){
+            console.log("Delete", itemIndex);
+            itemJsonArrayStr = localStorage.getItem('itemsJson');
+            itemJsonArray = JSON.parse(itemJsonArrayStr);
+            itemJsonArray.splice(itemIndex, 1);
+            localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray));
+            update();
+        }
+    </script>
+</body>
+
+</html>
